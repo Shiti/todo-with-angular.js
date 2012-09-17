@@ -30,13 +30,6 @@ object Todo {
     }
   }
 
-  //  def simple={
-  //    get[String]("id")~
-  //      get[String]("text")~
-  //      get[String]("done") map {
-  //      case id~text~done =>Todo(id,text,done)
-  //    }
-  //  }
 
   /* Retrieve all todos */
   def getAll(): Seq[Todo] = {

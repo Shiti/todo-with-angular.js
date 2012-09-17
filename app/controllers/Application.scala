@@ -1,8 +1,7 @@
 package controllers
 
-import libs.json.JsValue
 import play.api.mvc._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import java.util.UUID
 
 import com.codahale.jerkson.Json._
@@ -13,7 +12,7 @@ import models.Todo
 object Application extends Controller {
 
   def index = Action {
-    Ok(views.html.index())
+    Ok(views.html.trial())
   }
 
   /* GET */

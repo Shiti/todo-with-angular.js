@@ -1,0 +1,44 @@
+@main("Todo App") {
+
+<script src="@routes.Assets.at("javascripts/angularApp/todo.js")" type="text/javascript"></script>
+<link rel="stylesheet" href="@routes.Assets.at("stylesheets/todos.css")">
+<link rel="stylesheet" href="@routes.Assets.at("stylesheets/todoStyle.css")">
+
+<div id="todoapp" ng-app>
+
+    <div class="title">
+        <h1>Todos</h1>
+    </div>
+
+    <div class="content" ng-controller="TodoCtrl">
+        <div id="create-todo">
+            <form ng-submit="addTodo()">
+                <input id="new-todo" placeholder="What needs to be done?" type="text" ng-model="todoText" ng-dblclick="showToolTip()"/>
+                <span class="ui-tooltip-top" ng-show="displayTip">Press Enter to save this task</span>
+            </form>
+        </div>
+        <div id="todos">
+            <ul id="todo-list">
+                <li ng-repeat="todo in todos">
+                    <div id={{todo.index}}>
+                    <div class='display' >
+                        <input type="checkbox" ng-model="todo.done">
+                        <span class="done-{{todo.done}} todo-text">{{todo.text}}</span>
+                        <span class='todo-destroy' ng-click="remove(todo)"></span>
+                    </div>
+                    <div class='edit' >
+                        <input class='todo-input done-{{todo.done}}' type='text' value=''/>
+                    </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div id="todo-stats">
+            <span class='todo-count' ng-show="displayStats()">{{remaining()}} {{remainingWord()}} left</span>
+            <span class='todo-clear' ng-click="archive()" ng-show="displayCompleted()">
+                <a href='#'>Clear {{completed()}} completed {{completedWord()}}</a>
+            </span>
+        </div>
+    </div>
+</div>
+}
