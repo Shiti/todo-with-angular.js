@@ -1,16 +1,26 @@
-function TodoCtrl($scope) {
+function TodoCtrl($scope,$http) {
+    $scope.todos=[];
 
-    $scope.todos = [
-        {index:1,text:'learn angular', done:true},
-        {index:2,text:'build an angular app', done:false}];
+    $http.get('/bb/todos').success(function(data) {
+        $scope.todos = data;
+    });
 
-    $scope.lastSize=$scope.todos.length;
+    $scope.dispOrder=function(){
+        var count=0;
+        angular.forEach($scope.todos, function(todo) {
+            if(todo.disp_order>count){
+                count=todo.disp_order;
+            }
+        })
+        return count;
+    };
 
     $scope.addTodo = function() {
-        var iValue=$scope.lastSize;
-        $scope.todos.push({index:(iValue+1),text:$scope.todoText, done:false});
-        $scope.todoText = '';
-        $scope.lastSize++;
+        var iValue=$scope.dispOrder();
+        $http.post('/bb/todos',{disp_order:(iValue+1),text:$scope.todoText, done:false}).success(function(data){
+            $scope.todos.push({id:data.id,disp_order:(iValue+1),text:$scope.todoText, done:false});
+            $scope.todoText = '';
+        })
     };
 
     $scope.remaining = function() {
@@ -21,11 +31,12 @@ function TodoCtrl($scope) {
         return count;
     };
 
-    $scope.archive = function() {
-        var oldTodos = $scope.todos;
-        $scope.todos = [];
-        angular.forEach(oldTodos, function(todo) {
-            if (!todo.done) $scope.todos.push(todo);
+    $scope.clearCompleted=function(){
+        var completed=$scope.todos.filter(function(val){
+            return val.done==true;
+        });
+        angular.forEach(completed, function(todo) {
+            $scope.remove(todo);
         });
     };
 
@@ -68,25 +79,24 @@ function TodoCtrl($scope) {
     };
 
     $scope.remove= function(todo) {
-        var index=todo.index;
-        var oldTodos=$scope.todos;
-        $scope.todos = [];
-        angular.forEach(oldTodos, function(todo) {
-            if(todo.index!=index){
-                $scope.todos.push(todo);
-            }
+        $http.delete('/bb/todos/'+todo.id).success(function(){
+            $scope.todos=$scope.todos.filter(function(val){
+               return val.id!=todo.id;
+            });
         });
-        angular.element('#'+index).parent().remove();
     };
 
     $scope.displayTip=false;
 
     $scope.showToolTip=function(){
         $('.ui-tooltip-top').show();
-        $('.ui-tooltip-top').fadeOut(1600);
-//        var timer=setTimeout($('.ui-tooltip-top').show(),1000);
+        $('.ui-tooltip-top').fadeOut();
+//        var timer=setTimeout($('.ui-tooltip-top').show(),100000);
 //        clearTimeout(timer);
         $('.ui-tooltip-top').hide();
     };
 
+    $scope.updateStatus=function(todo){
+        $http.put('/bb/todos/'+todo.id,todo);
+    }
 }

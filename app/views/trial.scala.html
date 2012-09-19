@@ -20,22 +20,20 @@
         <div id="todos">
             <ul id="todo-list">
                 <li ng-repeat="todo in todos">
-                    <div id={{todo.index}}>
                     <div class='display' >
-                        <input type="checkbox" ng-model="todo.done">
+                        <input type="checkbox" ng-model="todo.done" ng-change="updateStatus(todo)">
                         <span class="done-{{todo.done}} todo-text">{{todo.text}}</span>
                         <span class='todo-destroy' ng-click="remove(todo)"></span>
                     </div>
                     <div class='edit' >
                         <input class='todo-input done-{{todo.done}}' type='text' value=''/>
                     </div>
-                    </div>
                 </li>
             </ul>
         </div>
         <div id="todo-stats">
             <span class='todo-count' ng-show="displayStats()">{{remaining()}} {{remainingWord()}} left</span>
-            <span class='todo-clear' ng-click="archive()" ng-show="displayCompleted()">
+            <span class='todo-clear' ng-click="clearCompleted()" ng-show="displayCompleted()">
                 <a href='#'>Clear {{completed()}} completed {{completedWord()}}</a>
             </span>
         </div>
